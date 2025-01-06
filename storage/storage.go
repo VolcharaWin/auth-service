@@ -17,6 +17,11 @@ func CreateDB() (*sql.DB, error) {
 		password TEXT NOT NULL
 		);
 	`)
+
+	if err != nil {
+		return nil, err
+	}
+	_, err = db.Exec("PRAGMA journal_mode=WAL;")
 	if err != nil {
 		return nil, err
 	}
