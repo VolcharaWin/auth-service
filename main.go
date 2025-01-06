@@ -27,26 +27,30 @@ func main() {
 	//Обработка входа в систему
 	go func() {
 		for data := range srv.LoginDataChannel {
-			log.Println("You are trying to log in.")
-			log.Printf("login: %s\tpassword: %s\n", data.Login, data.Password)
-			exists, err := check.LoginCheck(db, data.Login, data.Password)
-			if err != nil {
-				log.Println(err)
-				return
-			}
-			if exists {
-				log.Printf("The user %s does exist.", data.Login)
-			} else {
-				log.Printf("The user %s does not exist.", data.Login)
-			}
+			go func(data server.UserData) {
+				log.Println("You are trying to log in.")
+				log.Printf("login: %s\tpassword: %s\n", data.Login, data.Password)
+				exists, err := check.LoginCheck(db, data.Login, data.Password)
+				if err != nil {
+					log.Println(err)
+					return
+				}
+				if exists {
+					log.Printf("The user %s does exist.", data.Login)
+				} else {
+					log.Printf("The user %s does not exist.", data.Login)
+				}
+			}(data)
 		}
 	}()
 	//Обработка регистрации
 	go func() {
 		for data := range srv.RegisterDataChannel {
-			log.Println("You are trying to register an account.")
-			time.Sleep(5 * time.Second)
-			log.Printf("login: %s\tpassword: %s\n", data.Login, data.Password)
+			go func(data server.UserData) {
+				log.Println("You are trying to register an account.")
+				time.Sleep(5 * time.Second)
+				log.Printf("login: %s\tpassword: %s\n", data.Login, data.Password)
+			}(data)
 		}
 	}()
 	srv.Run()
