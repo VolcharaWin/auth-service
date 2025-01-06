@@ -9,11 +9,22 @@ import (
 	"examples.com/auth-service/storage"
 	"examples.com/auth-service/user"
 	_ "github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 	_ "gorm.io/driver/sqlite"
 	_ "gorm.io/gorm"
 )
 
 func main() {
+	//Load env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error while loading env file: %v\n", err)
+	}
+
+	// !!!!!! getting the session key !!!!!!
+	//sessionKey := os.Getenv("SESSION_KEY")
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 	//Custom errors
 	errExistingLogin := errors.New("this login already exists")
 
