@@ -7,8 +7,6 @@ import (
 )
 
 func CreateDB() (*sql.DB, error) {
-	var con *sql.DB
-
 	db, err := sql.Open("sqlite3", "storage/user.db")
 	if err != nil {
 		return nil, err
@@ -26,5 +24,5 @@ func CreateDB() (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	return con, err
+	return db, err
 }

@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"examples.com/auth-service/check"
 	"examples.com/auth-service/server"
 	"examples.com/auth-service/storage"
 	_ "github.com/golang-jwt/jwt/v5"
@@ -12,21 +13,32 @@ import (
 )
 
 func main() {
+
 	log.Println("====== Initialazing database and connecting to it ======")
-	_, err := storage.CreateDB()
+	db, err := storage.CreateDB()
 	if err != nil {
 		panic(err)
 	}
-	//defer con.Close()
+	defer db.Close()
 	log.Println("====== Connection to database is established =======")
+
 	log.Println("====== Setting up the router ======")
 	srv := server.NewServer()
 	//Обработка входа в систему
 	go func() {
 		for data := range srv.LoginDataChannel {
 			log.Println("You are trying to log in.")
-			time.Sleep(5 * time.Second)
 			log.Printf("login: %s\tpassword: %s\n", data.Login, data.Password)
+			exists, err := check.LoginCheck(db, data.Login, data.Password)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			if exists {
+				log.Printf("The user %s does exist.", data.Login)
+			} else {
+				log.Printf("The user %s does not exist.", data.Login)
+			}
 		}
 	}()
 	//Обработка регистрации
