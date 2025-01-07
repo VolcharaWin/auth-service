@@ -9,6 +9,8 @@ import (
 type UserData struct {
 	Login    string
 	Password string
+	Context  *gin.Context
+	Done     chan bool
 }
 
 type Server struct {
@@ -16,24 +18,43 @@ type Server struct {
 	RegisterDataChannel chan UserData
 }
 
+func RespondWithError(c *gin.Context, code int, message string) {
+	c.JSON(code, gin.H{"error": message})
+}
+
+func RespondWithSuccess(c *gin.Context, code int, message string) {
+	c.JSON(code, gin.H{"message": message})
+}
+
 func (s *Server) register(c *gin.Context) {
 	login := c.PostForm("login")
 	password := c.PostForm("password")
 
+	done := make(chan bool)
+
 	s.RegisterDataChannel <- UserData{
 		Login:    login,
 		Password: password,
+		Context:  c,
+		Done:     done,
 	}
-	c.JSON(http.StatusOK, gin.H{"login": login, "password": password})
+
+	<-done
 }
 func (s *Server) login(c *gin.Context) {
 	login := c.PostForm("login")
 	password := c.PostForm("password")
+
+	done := make(chan bool)
+
 	s.LoginDataChannel <- UserData{
 		Login:    login,
 		Password: password,
+		Context:  c,
+		Done:     done,
 	}
-	c.JSON(http.StatusOK, gin.H{"login": login, "password": password})
+
+	<-done
 }
 func NewServer() *Server {
 	return &Server{
