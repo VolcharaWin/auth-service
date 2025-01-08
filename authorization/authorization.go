@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"time"
 
 	"examples.com/auth-service/custom_errors"
 	"examples.com/auth-service/hashing"
@@ -16,7 +15,6 @@ import (
 // errLoginExists := errors.New("this login already exists")
 func Login(srv *server.Server, data server.UserData, db *sql.DB) {
 	defer close(data.Done)
-	time.Sleep(time.Second * 5)
 	c := data.Context
 	log.Println("You are trying to log in.")
 	exists, err := user.LoginCheck(db, data.Login)
