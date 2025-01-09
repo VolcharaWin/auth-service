@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 
+	"examples.com/auth-service/token"
 	"github.com/gin-gonic/gin"
 )
 
@@ -78,9 +79,35 @@ func (s *Server) SetupRouter() *gin.Engine {
 	})
 	r.POST("/login", s.login)
 	r.POST("/register", s.register)
+
+	protected := r.Group("/protected")
+	protected.Use(AuthMiddleware())
+	{
+		protected.GET("/data", func(c *gin.Context) {
+			c.JSON(http.StatusOK, gin.H{"message": "This is a protected route"})
+		})
+	}
 	return r
 }
+func AuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tokenString, err := c.Cookie("auth_token")
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authentication token not found"})
+			c.Abort()
+			return
+		}
 
+		err = token.VerifyToken(tokenString)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			c.Abort()
+			return
+		}
+
+		c.Next()
+	}
+}
 func (s *Server) Run() {
 	r := s.SetupRouter()
 	r.Run("localhost:8082")

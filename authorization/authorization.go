@@ -8,6 +8,7 @@ import (
 	"examples.com/auth-service/custom_errors"
 	"examples.com/auth-service/hashing"
 	"examples.com/auth-service/server"
+	"examples.com/auth-service/token"
 	"examples.com/auth-service/user"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -34,9 +35,15 @@ func Login(srv *server.Server, data server.UserData, db *sql.DB) {
 		log.Println(err)
 		return
 	}
-	server.RespondWithSuccess(c, 200, "successful login")
-	log.Println("Successful authorization")
-
+	log.Println("The login and password match\nCreating the jwt...")
+	token, err := token.CreateToken(data.Login)
+	if err != nil {
+		server.RespondWithError(c, 500, http.StatusText(500))
+		log.Println("error while creating a token: ", err)
+	} else {
+		c.SetCookie("auth_token", token, 3600*24, "/", "localhost", false, true)
+		server.RespondWithSuccess(c, 200, "successful login")
+	}
 }
 
 func Registration(srv *server.Server, data server.UserData, db *sql.DB) {
