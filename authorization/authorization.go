@@ -5,11 +5,11 @@ import (
 	"log"
 	"net/http"
 
-	"examples.com/auth-service/custom_errors"
-	"examples.com/auth-service/hashing"
-	"examples.com/auth-service/server"
-	"examples.com/auth-service/token"
-	"examples.com/auth-service/user"
+	"github.com/VolcharaWin/auth-service/custom_errors"
+	"github.com/VolcharaWin/auth-service/hashing"
+	"github.com/VolcharaWin/auth-service/server"
+	"github.com/VolcharaWin/auth-service/token"
+	"github.com/VolcharaWin/auth-service/user"
 	_ "github.com/mattn/go-sqlite3"
 )
 

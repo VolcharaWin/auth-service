@@ -4,7 +4,7 @@ import (
 	"os"
 	"time"
 
-	"examples.com/auth-service/custom_errors"
+	"github.com/VolcharaWin/auth-service/custom_errors"
 	"github.com/golang-jwt/jwt/v5"
 )
 

@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"examples.com/auth-service/hashing"
+	"github.com/VolcharaWin/auth-service/hashing"
 )
 
 func LoginCheck(db *sql.DB, login string) (bool, error) {

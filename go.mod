@@ -1,4 +1,4 @@
-module examples.com/auth-service
+module github.com/VolcharaWin/auth-service
 
 go 1.23.4
 

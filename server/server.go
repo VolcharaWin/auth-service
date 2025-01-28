@@ -3,7 +3,7 @@ package server
 import (
 	"net/http"
 
-	"examples.com/auth-service/token"
+	"github.com/VolcharaWin/auth-service/token"
 	"github.com/gin-gonic/gin"
 )
 

@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"examples.com/auth-service/authorization"
-	"examples.com/auth-service/server"
-	"examples.com/auth-service/storage"
+	"github.com/VolcharaWin/auth-service/authorization"
+	"github.com/VolcharaWin/auth-service/server"
+	"github.com/VolcharaWin/auth-service/storage"
 	_ "github.com/golang-jwt/jwt/v5"
 	"github.com/joho/godotenv"
 	_ "gorm.io/driver/sqlite"
